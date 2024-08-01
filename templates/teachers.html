@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}Teachers{% endblock %}
+
+{% block content %}
+
+<div class="container my-5">
+
+
+    <h1 class="text-center mb-4 text-custom-color">Teachers</h1>
+
+ 
+    <div class="card mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-color text-white d-flex justify-content-center">
+            <h2 id="form-title" class="mb-0">Add Teacher</h2>
+        </div>
+        <div class="card-body">
+            <form id="teacher-form" method="POST" action="{{ url_for('teachers') }}">
+                <input type="hidden" id="teacher_id" name="teacher_id">
+                
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name:</label>
+                    <input type="text" id="name" name="name" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="father_name" class="form-label">Father Name:</label>
+                    <input type="text" id="father_name" name="father_name" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="cnic">CNIC:</label>
+                    <input type="text" placeholder="12345-1245689-1" class="form-control" id="cnic" name="cnic" required="" pattern="\d{5}-\d{7}-\d{1}" title="Please enter a valid CNIC number in the format 12345-1234567-1">
+                </div>
+
+                <div class="mb-3">
+                    <label for="mobile_number" class="form-label">Mobile Number:</label>
+                    <input type="text" id="mobile_number" name="mobile_number" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="education" class="form-label">Education:</label>
+                    <select id="education" name="education" class="form-select" required>
+                        <option value="Matric" {% if teacher and teacher.education == 'Matric' %}selected{% endif %}>Matric</option>
+                        <option value="Inter" {% if teacher and teacher.education == 'Inter' %}selected{% endif %}>Inter</option>
+                        <option value="Graduate" {% if teacher and teacher.education == 'Graduate' %}selected{% endif %}>Graduate</option>
+                        <option value="Master" {% if teacher and teacher.education == 'Master' %}selected{% endif %}>Master</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="degree_name" class="form-label">Degree:</label>
+                    <input type="text" id="degree_name" name="degree_name" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="experience" class="form-label">Experience:</label>
+                    <input type="text" id="experience" name="experience" class="form-control" required>
+                </div>
+
+                <div class="d-flex justify-content-center">
+                <button type="submit" class="bg-color btn-sm button-bg p-1">Save</button>
+               </div>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="mt-4">
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Father Name</th>
+                    <th>CNIC</th>
+                    <th>Mobile Number</th>
+                    <th>Education</th>
+                    <th>Experience</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for teacher in teachers %}
+                <tr>
+                    <td>{{ teacher.id }}</td>
+                    <td>{{ teacher.name }}</td>
+                    <td>{{ teacher.father_name }}</td>
+                    <td>{{ teacher.cnic }}</td>
+                    <td>{{ teacher.mobile_number }}</td>
+                    <td>{{ teacher.education }}</td>
+                    <td>{{ teacher.experience }}</td>
+                    <td>
+                        <button class="btn rounded-pill bg-color btn-sm button-bg" onclick="editTeacher('{{ teacher.id }}', '{{ teacher.name }}', '{{ teacher.father_name }}', '{{ teacher.cnic }}', '{{ teacher.mobile_number }}', '{{ teacher.education }}', '{{ teacher.degree_name }}', '{{ teacher.experience }}')">Edit</button>
+                        <form method="POST" action="{{ url_for('delete_teacher', teacher_id=teacher.id) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this teacher?');">
+                            <button type="submit" class="btn rounded-pill bg-color btn-sm button-bg-red">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    
+     
+    <div class="text-center mt-3">
+        <a href="{{ url_for('index') }}" class="bg-color btn-sm button-bg p-1 no-underline hover-border-black">Back to Home</a>
+    </div>
+    
+
+</div>
+
+<script>
+    function editTeacher(id, name, father_name, cnic, mobile_number, education, degree_name, experience) {
+        document.getElementById('teacher_id').value = id;
+        document.getElementById('name').value = name;
+        document.getElementById('father_name').value = father_name;
+        document.getElementById('cnic').value = cnic;
+        document.getElementById('mobile_number').value = mobile_number;
+        document.getElementById('education').value = education;
+        document.getElementById('degree_name').value = degree_name;
+        document.getElementById('experience').value = experience;
+        document.getElementById('form-title').innerText = 'Edit Teacher';
+    }
+
+    document.getElementById('teacher-form').onsubmit = function() {
+        document.getElementById('form-title').innerText = 'Add Teacher';
+    };
+</script>
+
+{% endblock %}
+
+
+

@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}Fees{% endblock %}
+
+{% block content %}
+
+    <h2>Add Fee</h2>
+    <form method="POST" action="/fee_form">
+        <input type="hidden" name="fee_id" id="fee_id">
+        <input type="number" id="student_id" name="student_id" value="{{ request.args.get('student_id') }}">
+        <!-- <input type="number" id="subcourse_id" name="subcourse_id" value="{{ request.args.get('subcourse_id') }}">
+        <input type="number" id="course_id" name="course_id" value="{{ request.args.get('course_id') }}"> -->
+        
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" value="{{ today }}"><br>
+        
+        <label for="admission_fee">Admission Fee:</label>
+        <input type="number" id="admission_fee" name="admission_fee"><br>
+        
+        <label for="admission_discount">Admission Discount:</label>
+        <input type="number" id="admission_discount" name="admission_discount"><br>
+        
+        <label for="balance_admission_fee">Net Admission Fee:</label>
+        <input type="number" id="balance_admission_fee" name="balance_admission_fee" readonly><br>
+        
+        <label for="installment_type">Installment Type:</label>
+        <select id="installment_type" name="installment_type">
+            <option value="one_time">One Time</option>
+            <option value="monthly">Monthly</option>
+        </select><br>
+        <div id="monthly_fields" style="display:none;">
+            <label for="year">Year:</label>
+            <input type="text" id="year" name="year"><br>
+            
+            <label for="month">Month:</label>
+            <input type="text" id="month" name="month"><br>
+        </div>
+        
+        <label for="fee_amount">Fee Amount:</label>
+        <input type="number" id="fee_amount" name="fee_amount"><br>
+        
+        <label for="discount_amount">Discount Amount:</label>
+        <input type="number" id="discount_amount" name="discount_amount"><br>
+        
+        <label for="discount_percentage">Discount Percentage:</label>
+        <input type="number" id="discount_percentage" name="discount_percentage"><br>
+        
+        <label for="other_charges">Other Charges:</label>
+        <input type="number" id="other_charges" name="other_charges"><br>
+        
+        
+        <label for="net_fee">Net Fee:</label>
+        <input type="number" id="net_fee" name="net_fee" readonly><br>
+        
+        
+       
+        
+        
+        <label for="payment_mode">Payment Mode:</label>
+        <select id="payment_mode" name="payment_mode">
+            <option value="cash">Cash</option>
+            <option value="online_transfer">Online Transfer</option>
+            <option value="credit_card">Credit Card</option>
+        </select><br>
+        
+        <label for="payment_made">Payment Made:</label>
+        <input type="number" id="payment_made" name="payment_made"><br>
+        
+        <label for="outstanding_fee">Balance Fee:</label>
+        <input type="number" id="outstanding_fee" name="outstanding_fee" readonly><br>
+        
+        <button type="submit">Submit</button>
+    </form>
+    
+    <script>
+        document.getElementById('installment_type').addEventListener('change', function() {
+            var monthlyFields = document.getElementById('monthly_fields');
+            if (this.value === 'monthly') {
+                monthlyFields.style.display = 'block';
+            } else {
+                monthlyFields.style.display = 'none';
+            }
+        });
+    
+        document.getElementById('admission_fee').addEventListener('input', calculateNetAdmissionFee);
+        document.getElementById('admission_discount').addEventListener('input', calculateNetAdmissionFee);
+        document.getElementById('fee_amount').addEventListener('input', calculateNetFee);
+        document.getElementById('discount_amount').addEventListener('input', calculateNetFee);
+        document.getElementById('discount_percentage').addEventListener('input', calculateNetFee);
+        document.getElementById('other_charges').addEventListener('input', calculateNetFee);
+        document.getElementById('payment_made').addEventListener('input', calculateOutstandingFee);
+    
+        function calculateNetAdmissionFee() {
+            var admissionFee = parseFloat(document.getElementById('admission_fee').value) || 0;
+            var admissionDiscount = parseFloat(document.getElementById('admission_discount').value) || 0;
+            var netAdmissionFee = admissionFee - admissionDiscount;
+            document.getElementById('balance_admission_fee').value = netAdmissionFee;
+            calculateNetFee();
+        }
+    
+        function calculateNetFee() {
+            var feeAmount = parseFloat(document.getElementById('fee_amount').value) || 0;
+            var discountAmount = parseFloat(document.getElementById('discount_amount').value) || 0;
+            var discountPercentage = parseFloat(document.getElementById('discount_percentage').value) || 0;
+            var netAddmissionFee = parseFloat(document.getElementById('balance_admission_fee').value) || 0;
+            var otherCharges = parseFloat(document.getElementById('other_charges').value) || 0;
+            var feePercentageDiscount = feeAmount * (discountPercentage / 100);
+            var netFeePayable = feeAmount - discountAmount - feePercentageDiscount + otherCharges + netAddmissionFee;
+            document.getElementById('net_fee').value = netFeePayable;
+            calculateOutstandingFee();
+        }
+    
+        function calculateOutstandingFee() {
+            var netFeePayable = parseFloat(document.getElementById('net_fee').value) || 0;
+            var paymentMade = parseFloat(document.getElementById('payment_made').value) || 0;
+            var outstandingFee = netFeePayable - paymentMade;
+            document.getElementById('outstanding_fee').value = outstandingFee;
+        }
+    
+       
+        // Check if the 'edit' query parameter is present
+    if (window.location.search.includes('edit=')) {
+        // Extract the student ID from the 'edit' query parameter
+        const studentId = new URLSearchParams(window.location.search).get('edit');
+    
+        fetch('/get_fee/' + studentId)
+            .then(response => response.json())
+            .then(data => {
+                if (data) {
+                    document.getElementById('fee_id').value = data.id;
+                    document.getElementById('fee_amount').value = data.fee_amount;
+                    document.getElementById('discount_amount').value = data.discount_amount;
+                    document.getElementById('discount_percentage').value = data.discount_percentage;
+                    document.getElementById('net_fee').value = data.net_fee;
+                    document.getElementById('installment_type').value = data.installment_type;
+                    document.getElementById('year').value = data.year;
+                    document.getElementById('month').value = data.month;
+                    document.getElementById('payment_made').value = data.payment_made;
+                    document.getElementById('other_charges').value = data.other_charges;
+                    document.getElementById('date').value = data.date;
+                    document.getElementById('admission_fee').value = data.admission_fee;
+                    document.getElementById('admission_discount').value = data.admission_discount;
+                    document.getElementById('balance_admission_fee').value = data.balance_admission_fee;
+                    calculateNetFee();
+                    calculateOutstandingFee();
+                }
+            });
+    }
+    
+    </script>
+    
+
+{% endblock %}
+
+
+
+
+
+

@@ -1,0 +1,138 @@
+
+
+{% extends "base.html" %}
+
+{% block title %}Attendance{% endblock %}
+
+{% block content %}
+<h1>Attendance</h1>
+
+<form id="attendance-form" method="POST" action="{{ url_for('attendance') }}">
+    <label for="course_id">Course:</label>
+    <select id="course_id" name="course_id" required>
+        <option value="">Select Course</option>
+        {% for course in courses %}
+        <option value="{{ course.id }}">{{ course.name }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label for="subcourse_id">Subcourse:</label>
+    <select id="subcourse_id" name="subcourse_id" required>
+        <option value="">Select Subcourse</option>
+    </select><br><br>
+
+    <label for="attendance_date">Date:</label>
+    <input type="date" id="attendance_date" name="attendance_date" value="{{ today }}" required><br><br>
+
+    <table border="1" id="students-table" style="display:none;">
+        <thead>
+            <tr>
+                <th>Student Name</th>
+                <th>Father Name</th>
+                <th>CNIC</th>
+                <th>Mobile Number</th>
+                <th>Attendance <input type="checkbox" id="select-all"> Select All</th>
+            </tr>
+        </thead>
+        <tbody id="students-tbody">
+            <!-- Student rows will be appended here by JavaScript -->
+        </tbody>
+    </table><br>
+
+    <button type="submit">Save Attendance</button>
+</form>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Student Name</th>
+            <th>Father Name</th>
+            <th>Course</th>
+            <th>Subcourse</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for record in attendance_records %}
+        <tr>
+            <td>{{ record.student.name }}</td>
+            <td>{{ record.student.father_name }}</td>
+            <td>{{ record.course.name }}</td>
+            <td>{{ record.subcourse.name }}</td>
+            <td>{{ record.date.strftime('%Y-%m-%d') }}</td>
+            <td>{{ record.status }}</td>
+            <td>
+                <a href="{{ url_for('edit_attendance', attendance_id=record.id) }}">Edit</a>
+                <form action="{{ url_for('delete_attendance', attendance_id=record.id) }}" method="post" style="display:inline;">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    document.getElementById('course_id').addEventListener('change', function() {
+        const courseId = this.value;
+        fetch(`/get_subcourses/${courseId}`)
+            .then(response => response.json())
+            .then(data => {
+                const subcourseSelect = document.getElementById('subcourse_id');
+                subcourseSelect.innerHTML = '<option value="">Select Subcourse</option>';
+                data.subcourses.forEach(subcourse => {
+                    subcourseSelect.innerHTML += `<option value="${subcourse.id}">${subcourse.name}</option>`;
+                });
+            }   );
+    });
+
+    document.getElementById('subcourse_id').addEventListener('change', function() {
+        const subcourseId = this.value;
+        fetch(`/get_students/${subcourseId}`)
+            .then(response => response.json())
+            .then(data => {
+                const studentsTable = document.getElementById('students-table');
+                const studentsTbody = document.getElementById('students-tbody');
+                studentsTbody.innerHTML = '';
+                if (data.students.length > 0) {
+                    studentsTable.style.display = 'block';
+                    data.students.forEach(student => {
+                        studentsTbody.innerHTML += `
+                            <tr>
+                                <td>${student.name}</td>
+                                <td>${student.father_name}</td>
+                                <td>${student.cnic}</td>
+                                <td>${student.mobile}</td>
+                                <td><input type="checkbox" name="attendance_${student.id}" value="present"></td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    studentsTable.style.display = 'none';
+                }
+            });
+    });
+
+    document.getElementById('attendance-form').addEventListener('submit', function(event) {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"][name^="attendance_"]');
+        checkboxes.forEach(checkbox => {
+            if (!checkbox.checked) {
+                const hiddenField = document.createElement('input');
+                hiddenField.type = 'hidden';
+                hiddenField.name = checkbox.name;
+                hiddenField.value = 'absent';
+                this.appendChild(hiddenField);
+            }
+        });
+    });
+
+    document.getElementById('select-all').addEventListener('change', function() {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"][name^="attendance_"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = this.checked;
+        });
+    });
+</script>
+{% endblock %}

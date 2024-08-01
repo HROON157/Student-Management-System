@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Assign Permissions{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h1 class="card-title text-center mb-4 text-custom-color font-weight-bold">Assign Permissions</h1>
+                    <form method="POST" action="{{ url_for('assign_permissions') }}">
+                        <div class="form-group">
+                            <label for="role" class="font-weight-bold">Role:</label>
+                            <select class="form-control" name="role_id" id="role" required>
+                                {% for role in roles %}
+                                <option value="{{ role.id }}">{{ role.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="permissions" class="font-weight-bold">Permissions:</label>
+                            <select class="form-control" name="permission_ids" id="permissions" multiple required>
+                                {% for permission in permissions %}
+                                <option value="{{ permission.id }}">{{ permission.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn bg-color btn-sm rounded-pill pl-3 pr-3 button-bg mt-4">Assign Permissions</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mt-5">
+                <div class="card-body">
+                    <h2 class="card-title text-center text-custom-color font-weight-bold">Assigned Permissions</h2>
+                    {% for role in roles %}
+                    <div class="mb-4">
+                        <h3 class="h5">{{ role.name }}</h3>
+                        <ul class="list-group">
+                            {% for permission in role.permissions %}
+                            <li class="list-group-item">{{ permission.name }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <hr>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

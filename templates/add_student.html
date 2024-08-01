@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Student Admission Form</h2>
+<form method="POST">
+    
+    <label for="name">Name:</label><br>
+    <input type="text" id="name" name="name" required><br><br>
+
+    <label for="father_name">Father Name:</label><br>
+    <input type="text" id="father_name" name="father_name" required><br><br>
+
+    <label for="qualification">Qualification:</label><br>
+    <select id="qualification" name="qualification">
+        <option value="Matric">Matric</option>
+        <option value="Inter">Inter</option>
+        <option value="Graduation">Graduation</option>
+    </select><br><br>
+
+    <label for="age">Age:</label><br>
+    <input type="number" id="age" name="age" required><br><br>
+
+    <label for="session">Session:</label><br>
+    <select id="session" name="session">
+        <option value="Morning">Morning</option>
+        <option value="Evening">Evening</option>
+    </select><br><br>
+
+    <label for="dob">Date of Birth:</label><br>
+    <input type="date" id="dob" name="dob" required><br><br>
+
+    <label for="address_street">Address (Street):</label><br>
+    <input type="text" id="address_street" name="address_street" required><br><br>
+
+    <label for="address_town">Address (Town):</label><br>
+    <input type="text" id="address_town" name="address_town" required><br><br>
+
+    <label for="address_city">Address (City):</label><br>
+    <input type="text" id="address_city" name="address_city" required><br><br>
+
+    <label for="address_country">Address (Country):</label><br>
+    <input type="text" id="address_country" name="address_country" required><br><br>
+
+    <label for="address_zipcode">Address (Zipcode):</label><br>
+    <input type="text" id="address_zipcode" name="address_zipcode" required><br><br>
+
+    <label for="cnic_number">CNIC Number:</label><br>
+    <input type="text" id="cnic_number" name="cnic_number" required><br><br>
+
+    <label for="email">Email:</label><br>
+    <input type="email" id="email" name="email" required><br><br>
+
+    <label for="phone">Phone Number:</label><br>
+    <input type="text" id="phone" name="phone"><br><br>
+
+    <label for="mobile">Mobile Number:</label><br>
+    <input type="text" id="mobile" name="mobile" required><br><br>
+
+    <label for="primary_contact_phone">Primary Contact Phone Number:</label><br>
+    <input type="text" id="primary_contact_phone" name="primary_contact_phone" required><br><br>
+
+    <label for="gender">Gender:</label><br>
+    <select id="gender" name="gender">
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+    </select><br><br>
+
+    <label for="reference_name">Reference Name:</label><br>
+    <input type="text" id="reference_name" name="reference_name"><br><br>
+
+    <label for="reference_contact_number">Reference Contact Number:</label><br>
+    <input type="text" id="reference_contact_number" name="reference_contact_number"><br><br>
+
+    <label for="course_id">Course:</label><br>
+    <select id="course_id" name="course_id">
+        {% for course in courses %}
+        <option value="{{ course.id }}">{{ course.name }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label for="subcourse_id">Subcourse:</label><br>
+    <select id="subcourse_id" name="subcourse_id">
+        {% for subcourse in subcourses %}
+        <option value="{{ subcourse.id }}">{{ subcourse.name }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label for="duration">Duration of Course:</label><br>
+    <input type="text" id="duration" name="duration" required><br><br>
+
+    <label for="full_fee">Full Fee:</label><br>
+    <input type="number" id="full_fee" name="full_fee" required><br><br>
+
+    <label for="mode_of_payment">Mode of Payment:</label><br>
+    <input type="text" id="mode_of_payment" name="mode_of_payment" required><br><br>
+
+    <label for="fee_installments">Fee Installments:</label><br>
+    <input type="number" id="fee_installments" name="fee_installments" required><br><br>
+
+    <label for="remarks">Remarks:</label><br>
+    <textarea id="remarks" name="remarks"></textarea><br><br>
+
+    <input type="submit" value="Add Student">
+</form>
+{% endblock %}

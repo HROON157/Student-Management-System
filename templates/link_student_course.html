@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Link Student to Course{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow p-4" style="width: 100%; max-width: 600px;">
+        <div class="card-body">
+            <h2 class="card-title mb-4 text-custom-color">Link Student to Course and Subcourse</h2>
+            <form method="POST" class="needs-validation" novalidate>
+                <input type="hidden" id="link_id" name="link_id"> 
+                <div class="mb-3">
+                    <label for="student_id" class="form-label">Student:</label>
+                    <select id="student_id" name="student_id" class="form-select" required>
+                        <option value="" disabled selected>Select a student</option>
+                        {% for student in students %}
+                        <option value="{{ student.id }}">{{ student.name }} - {{ student.father_name }} - {{ student.cnic }} - {{ student.mobile_number }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="invalid-feedback">Please select a student.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="course_id" class="form-label">Course:</label>
+                    <select id="course_id" name="course_id" class="form-select" required>
+                        <option value="" disabled selected>Select a course</option>
+                        {% for course in courses %}
+                        <option value="{{ course.id }}">{{ course.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="invalid-feedback">Please select a course.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="subcourse_id" class="form-label">Subcourse:</label>
+                    <select id="subcourse_id" name="subcourse_id" class="form-select" required>
+                        <option value="" disabled selected>Select a subcourse</option>
+                    </select>
+                    <div class="invalid-feedback">Please select a subcourse.</div>
+                </div>
+                <div class="d-flex justify-content-center mt-5">
+                <button type="submit" class="btn bg-color btn-sm button-bg">Link Student to Course</button>
+                </div>
+            </form>
+
+            {% if error %}
+            <div class="alert alert-danger mt-3">{{ error }}</div>
+            {% endif %}
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }} mt-3">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('course_id').addEventListener('change', function() {
+    const courseId = this.value;
+    fetch(`/get_subcourses/${courseId}`)
+        .then(response => response.json())
+        .then(data => {
+            const subcourseSelect = document.getElementById('subcourse_id');
+            subcourseSelect.innerHTML = '<option value="">Select Subcourse</option>';
+            data.subcourses.forEach(subcourse => {
+                subcourseSelect.innerHTML += `<option value="${subcourse.id}">${subcourse.name}</option>`;
+            });
+        });
+});
+
+function editLink(linkId, studentId, courseId, subcourseId) {
+    console.log('Edit link:', linkId, studentId, courseId, subcourseId);  // Debugging
+    document.getElementById('link_id').value = linkId;
+    document.getElementById('student_id').value = studentId;
+    document.getElementById('course_id').value = courseId;
+
+    fetch(`/get_subcourses/${courseId}`)
+        .then(response => response.json())
+        .then(data => {
+            const subcourseSelect = document.getElementById('subcourse_id');
+            subcourseSelect.innerHTML = '<option value="">Select Subcourse</option>';
+            data.subcourses.forEach(subcourse => {
+                const option = document.createElement('option');
+                option.value = subcourse.id;
+                option.textContent = subcourse.name;
+                subcourseSelect.appendChild(option);
+            });
+            subcourseSelect.value = subcourseId;
+        })
+        .catch(error => console.error('Error fetching subcourses:', error));
+}
+
+// Bootstrap form validation
+(function () {
+  'use strict'
+
+  // Fetch all the forms we want to apply custom Bootstrap validation styles to
+  var forms = document.querySelectorAll('.needs-validation')
+
+  // Loop over them and prevent submission
+  Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+      form.addEventListener('submit', function (event) {
+        if (!form.checkValidity()) {
+          event.preventDefault()
+          event.stopPropagation()
+        }
+
+        form.classList.add('was-validated')
+      }, false)
+    })
+})()
+</script>
+{% endblock %}

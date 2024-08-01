@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Link Teacher to Course{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-color text-white text-center">
+                        <h2>Link Teacher to Course and Subcourse</h2>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST">
+                            <div class="form-group">
+                                <label for="teacher_id">Teacher:</label>
+                                <select class="form-control" id="teacher_id" name="teacher_id">
+                                    {% for teacher in teachers %}
+                                    <option value="{{ teacher.id }}">{{ teacher.name }} - {{ teacher.father_name }} - {{ teacher.cnic }} - {{ teacher.mobile_number }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="course_id">Course:</label>
+                                <select class="form-control" id="course_id" name="course_id">
+                                    {% for course in courses %}
+                                    <option value="{{ course.id }}" {% if teachers.course_id == course.id %}selected{% endif %}>{{ course.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="subcourse_id">Subcourse:</label>
+                                <select class="form-control" id="subcourse_id" name="subcourse_id">
+                                    {% for subcourse in subcourses %}
+                                    <option value="{{ subcourse.id }}" {% if teachers.subcourse_id == subcourse.id %}selected{% endif %}>{{ subcourse.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="d-flex justify-content-center">
+                            <button type="submit" class="bg-color btn-sm button-bg p-1 mt-4">Link Teacher to Course</button>
+                        </div>
+                        </form>
+
+                        {% if error %}
+                        <div class="alert alert-danger mt-3">{{ error }}</div>
+                        {% endif %}
+
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                        {% for category, message in messages %}
+                        <div class="alert alert-dark container w-50` text-center text-white bg-blue mt-3">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('course_id').addEventListener('change', function() {
+            const courseId = this.value;
+            fetch(`/get_subcourses/${courseId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const subcourseSelect = document.getElementById('subcourse_id');
+                    subcourseSelect.innerHTML = '<option value="">Select Subcourse</option>';
+                    data.subcourses.forEach(subcourse => {
+                        subcourseSelect.innerHTML += `<option value="${subcourse.id}">${subcourse.name}</option>`;
+                    });
+                });
+        });
+    </script>
+{% endblock %}

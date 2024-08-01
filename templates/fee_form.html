@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}Fees{% endblock %}
+
+{% block content %}
+<div class="container mt-1">
+    <div class="row justify-content-center">
+        <div class="col-md-8"> 
+            <div class="card shadow-lg" style="padding: 20px;">
+                <div class="card-header bg-color text-white text-center">
+                    <h2 id="form-title" class="mb-0">Fee Form</h2>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('fee_form') }}">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="student_id" class="font-weight-bold">Student ID</label>
+                                    <input type="number" class="form-control" name="student_id" id="student_id" value="{{ request.args.get('student_id') }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="course_id" class="font-weight-bold">Course ID</label>
+                                    <input type="number" class="form-control" name="course_id" id="course_id" value="{{ request.args.get('course_id') }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="subcourse_id" class="font-weight-bold">Subcourse ID</label>
+                                    <input type="number" class="form-control" name="subcourse_id" id="subcourse_id" value="{{ request.args.get('subcourse_id') }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="date" class="font-weight-bold">Date</label>
+                                    <input type="date" class="form-control" id="date" name="date" value="{{ today }}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="admission_fee" class="font-weight-bold">Admission Fee</label>
+                                    <input type="number" class="form-control" id="admission_fee" name="admission_fee">
+                                </div>
+                                <div class="form-group">
+                                    <label for="admission_discount" class="font-weight-bold">Admission Discount</label>
+                                    <input type="number" class="form-control" id="admission_discount" name="admission_discount">
+                                </div>
+                                <div class="form-group">
+                                    <label for="balance_admission_fee" class="font-weight-bold">Net Admission Fee</label>
+                                    <input type="number" class="form-control" id="balance_admission_fee" name="balance_admission_fee" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="installment_type" class="font-weight-bold">Installment Type</label>
+                                    <select id="installment_type" class="form-control" name="installment_type">
+                                        <option value="one_time">One Time</option>
+                                        <option value="monthly">Monthly</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="fee_amount" class="font-weight-bold">Fee Amount</label>
+                                    <input type="number" class="form-control" id="fee_amount" name="fee_amount">
+                                </div>
+                                <div class="form-group">
+                                    <label for="discount_amount" class="font-weight-bold">Discount Amount</label>
+                                    <input type="number" class="form-control" id="discount_amount" name="discount_amount">
+                                </div>
+                                <div class="form-group">
+                                    <label for="discount_percentage" class="font-weight-bold">Discount Percentage</label>
+                                    <input type="number" class="form-control" id="discount_percentage" name="discount_percentage">
+                                </div>
+                                <div class="form-group">
+                                    <label for="other_charges" class="font-weight-bold">Other Charges</label>
+                                    <input type="number" class="form-control" id="other_charges" name="other_charges">
+                                </div>
+                                <div class="form-group">
+                                    <label for="net_fee" class="font-weight-bold">Net Fee</label>
+                                    <input type="number" class="form-control" id="net_fee" name="net_fee" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="payment_mode" class="font-weight-bold">Payment Mode</label>
+                                    <select id="payment_mode" class="form-control" name="payment_mode">
+                                        <option value="cash">Cash</option>
+                                        <option value="online_transfer">Online Transfer</option>
+                                        <option value="credit_card">Credit Card</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="payment_made" class="font-weight-bold">Payment Made</label>
+                                    <input type="number" class="form-control" id="payment_made" name="payment_made">
+                                </div>
+                                <div class="form-group">
+                                    <label for="outstanding_fee" class="font-weight-bold">Balance Fee</label>
+                                    <input type="number" class="form-control" id="outstanding_fee" name="outstanding_fee" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center mt-4 ">
+                            <button type="submit" class="btn btn-outline-dark-blue rounded-pill">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById('installment_type').addEventListener('change', function() {
+        var monthlyFields = document.getElementById('monthly_fields');
+        if (this.value === 'monthly') {
+            monthlyFields.style.display = 'block';
+        } else {
+            monthlyFields.style.display = 'none';
+        }
+    });
+
+    document.getElementById('admission_fee').addEventListener('input', calculateNetAdmissionFee);
+    document.getElementById('admission_discount').addEventListener('input', calculateNetAdmissionFee);
+    document.getElementById('fee_amount').addEventListener('input', calculateNetFee);
+    document.getElementById('discount_amount').addEventListener('input', calculateNetFee);
+    document.getElementById('discount_percentage').addEventListener('input', calculateNetFee);
+    document.getElementById('other_charges').addEventListener('input', calculateNetFee);
+    document.getElementById('payment_made').addEventListener('input', calculateOutstandingFee);
+
+    function calculateNetAdmissionFee() {
+        var admissionFee = parseFloat(document.getElementById('admission_fee').value) || 0;
+        var admissionDiscount = parseFloat(document.getElementById('admission_discount').value) || 0;
+        var netAdmissionFee = admissionFee - admissionDiscount;
+        document.getElementById('balance_admission_fee').value = netAdmissionFee;
+        calculateNetFee();
+    }
+
+    function calculateNetFee() {
+        var feeAmount = parseFloat(document.getElementById('fee_amount').value) || 0;
+        var discountAmount = parseFloat(document.getElementById('discount_amount').value) || 0;
+        var discountPercentage = parseFloat(document.getElementById('discount_percentage').value) || 0;
+        var netAdmissionFee = parseFloat(document.getElementById('balance_admission_fee').value) || 0;
+        var otherCharges = parseFloat(document.getElementById('other_charges').value) || 0;
+        var feePercentageDiscount = feeAmount * (discountPercentage / 100);
+        var netFeePayable = feeAmount - discountAmount - feePercentageDiscount + otherCharges + netAdmissionFee;
+        document.getElementById('net_fee').value = netFeePayable;
+        calculateOutstandingFee();
+    }
+
+    function calculateOutstandingFee() {
+        var netFeePayable = parseFloat(document.getElementById('net_fee').value) || 0;
+        var paymentMade = parseFloat(document.getElementById('payment_made').value) || 0;
+        var outstandingFee = netFeePayable - paymentMade;
+        document.getElementById('outstanding_fee').value = outstandingFee;
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Subcategories{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1 class="font-weight-bold text-custom-color">Subcategories</h1>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+
+    <div class="alert alert-dark w-75 text-center text-white bg-blue mx-auto">
+        {% for sub_category, message in messages %}
+        <div class="{{ subcategories }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+    
+    <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5 mb-4">
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class=" mb-4 text-custom-color d-flex justify-content-around">{% if subcategory %}Update{% else %}Add{% endif %} Subcategory</h4>
+            <form method="POST">
+                {% if subcategory %}
+                <input type="hidden" name="subcategory_id" value="{{ subcategory.id }}">
+                {% endif %}
+                <div class="form-group">
+                    <label for="category_id" class="font-weight-bold">Category:</label>
+                    <select id="category_id" name="category_id" class="form-control" required >
+                        {% for category in categories %}
+                        <option value="{{ category.id }}" {% if subcategory and subcategory.category_id == category.id %}selected{% endif %}>{{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="name" class="font-weight-bold">Name:</label>
+                    <input type="text" id="name" name="name" class="form-control" value="{{ subcategory.name if subcategory else '' }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="description" class="font-weight-bold">Description:</label>
+                    <input type="text" id="description" name="description" class="form-control" value="{{ subcategory.description if subcategory else '' }}" required>
+                </div>
+
+                <div class="text-center">
+                <button type="submit" class="btn-outline-dark-blue btn-outline-dark-blue:hover mt-4 ">{% if subcategory %}Update Subcategory{% else %}Add Subcategory{% endif %}</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+    {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+    {% endif %}
+   <div class="col-md-6 col-lg-5">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h4 class=" mb-4 text-custom-color d-flex justify-content-center">Subcategory List</h4>
+            <ul class="list-group">
+                {% for subcategory in all_subcategories %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ subcategory.category.name }}</strong> - {{ subcategory.name }}<br>
+                        <small>{{ subcategory.description }}</small>
+                    </div>
+                    <div>
+                        <a href="{{ url_for('subcategories', subcategory_id=subcategory.id) }}" class="btn btn-outline-dark-blue btn-sm mr-2">Edit</a>
+                        <form method="POST" action="{{ url_for('delete_subcategory', subcategory_id=subcategory.id) }}" class="d-inline">
+                            <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to delete this subcategory?')">Delete</button>
+                        </form>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="text-center mt-4">
+        <a href="{{ url_for('index') }}" class="btn bg-color btn-sm rounded-pill pl-3 pr-3 button-bg">Back to Home</a>
+    </div>
+</div>
+  
+</div>
+
+<script>
+    function editsubCategory(subcategory_id, category_id, name, description) {
+        document.getElementById('subcategory_id').value = subcategory_id;
+        document.getElementById('category_id').value = category_id;
+        document.getElementById('name').value = name;
+        document.getElementById('description').value = description;
+    }
+</script>
+{% endblock %}

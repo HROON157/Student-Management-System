@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block title %}Students{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+
+    <div class="text-center mb-4 text-custom-color">
+        <h1>Students</h1>
+    </div>
+
+    <div class="mb-4">
+        <form method="GET" action="{{ url_for('view_student') }}" class="d-flex justify-content-center align-items-center">
+            <div class="input-group mb-3">
+                <select id="search_by" name="search_by" class="form-select">
+                    <option value="name">Name</option>
+                    <option value="father_name">Father's Name</option>
+                    <option value="cnic">CNIC</option>
+                    <option value="mobile">Mobile Number</option>
+                    <option value="email">Email</option>
+                </select>
+                <input type="text" id="search_term" name="search_term" class="form-control" placeholder="Enter Search Term">
+                <button type="submit" class="btn bg-color btn-sm rounded-pill button-bg">Search</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped ">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Father Name</th>
+                    <th>CNIC</th>
+                    <th>Mobile Number</th>
+                    <th>Email</th>
+                    <th>Qualification</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for student in students %}
+                <tr>
+                    <td>{{ student.id }}</td>
+                    <td>{{ student.name }}</td>
+                    <td>{{ student.father_name }}</td>
+                    <td>{{ student.cnic }}</td>
+                    <td>{{ student.mobile }}</td>
+                    <td>{{ student.email }}</td>
+                    <td>{{ student.qualification }}</td>
+                    <td>
+                        <button class="btn btn-warning btn-sm" onclick="editStudent('{{ student.id }}', '{{ student.name }}', '{{ student.father_name }}', '{{ student.qualification }}', '{{ student.age }}', '{{ student.session }}', '{{ student.dob }}', '{{ student.street }}', '{{ student.town }}', '{{ student.city }}', '{{ student.country }}', '{{ student.zipcode }}', '{{ student.cnic }}', '{{ student.email }}', '{{ student.phone }}', '{{ student.mobile }}', '{{ student.primary_contact }}', '{{ student.gender }}', '{{ student.reference_name }}', '{{ student.reference_contact }}', '{{ student.remarks }}', '{{ student.status_id }}', '{{ student.admission_date }}')">Edit</button>
+                        <form method="POST" action="{{ url_for('delete_student', student_id=student.id) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this Student?');">
+                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div id="edit-student-form" class="card mt-4" style="display:none;">
+        <div class="card-header bg-secondary text-white">
+            <h4 id="form-title">Edit Student</h4>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('students') }}">
+                <input type="hidden" id="student_id" name="student_id">
+                <div class="mb-3">
+                    <label for="student_name" class="form-label">Name:</label>
+                    <input type="text" id="student_name" name="name" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="student_father_name" class="form-label">Father Name:</label>
+                    <input type="text" id="student_father_name" name="father_name" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="student_qualification" class="form-label">Qualification:</label>
+                    <input type="text" id="student_qualification" name="qualification" class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label for="student_age" class="form-label">Age:</label>
+                    <input type="number" id="student_age" name="age" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="student_session" class="form-label">Session:</label>
+                    <input type="text" id="student_session" name="session" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="student_dob" class="form-label">Date of Birth:</label>
+                    <input type="date" id="student_dob" name="dob" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="student_street" class="form-label">Street:</label>
+                    <input type="text" id="student_street" name="street" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="student_town" class="form-label">Town:</label>
+                    <input type="text" id="student_town" name="town" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="student_city" class="form-label">City:</label>
+                    <input type="text" id="student_city" name="city" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="student_country" class="form-label">Country:</label>
+                    <input type="text" id="student_country" name="country" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="student_zipcode" class="form-label">Zipcode:</label>
+                    <input type="text" id="student_zipcode" name="zipcode" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="student_cnic" class="form-label">CNIC:</label>
+                    <input type="text" id="student_cnic" name="cnic" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="student_email" class="form-label">Email:</label>
+                    <input type="email" id="student_email" name="email" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="student_phone" class="form-label">Phone:</label>
+                    <input type="text" id="student_phone" name="phone" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="student_mobile" class="form-label">Mobile:</label>
+                    <input type="text" id="student_mobile" name="mobile" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="student_primary_contact" class="form-label">Primary Contact:</label>
+                    <input type="text" id="student_primary_contact" name="primary_contact" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="student_gender" class="form-label">Gender:</label>
+                    <input type="text" id="student_gender" name="gender" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="student_reference_name" class="form-label">Reference Name:</label>
+                    <input type="text" id="student_reference_name" name="reference_name" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="student_reference_contact" class="form-label">Reference Contact:</label>
+                    <input type="text" id="student_reference_contact" name="reference_contact" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="student_remarks" class="form-label">Remarks:</label>
+                    <input type="text" id="student_remarks" name="remarks" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="student_status_id" class="form-label">Status ID:</label>
+                    <input type="number" id="student_status_id" name="status_id" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="student_admission_date" class="form-label">Admission Date:</label>
+                    <input type="date" id="student_admission_date" name="admission_date" class="form-control">
+                </div>
+                <button type="submit" class="btn-outline-dark-blue btn-outline-dark-blue:hover ">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="text-center mt-4">
+        <a href="{{ url_for('index') }}" class="btn bg-color btn-sm rounded-pill pl-3 pr-3 button-bg">Back to Home</a>
+    </div>
+</div>
+
+<script>
+    function editStudent(id, name, father_name, qualification, age, session, dob, street, town, city, country, zipcode, cnic, email, phone, mobile, primary_contact, gender, reference_name, reference_contact, remarks, status_id, admission_date) {
+        document.getElementById('student_id').value = id;
+        document.getElementById('student_name').value = name;
+        document.getElementById('student_father_name').value = father_name;
+        document.getElementById('student_qualification').value = qualification;
+        document.getElementById('student_age').value = age;
+        document.getElementById('student_session').value = session;
+        document.getElementById('student_dob').value = dob;
+        document.getElementById('student_street').value = street;
+        document.getElementById('student_town').value = town;
+        document.getElementById('student_city').value = city;
+        document.getElementById('student_country').value = country;
+        document.getElementById('student_zipcode').value = zipcode;
+        document.getElementById('student_cnic').value = cnic;
+        document.getElementById('student_email').value = email;
+        document.getElementById('student_phone').value = phone;
+        document.getElementById('student_mobile').value = mobile;
+        document.getElementById('student_primary_contact').value = primary_contact;
+        document.getElementById('student_gender').value = gender;
+        document.getElementById('student_reference_name').value = reference_name;
+        document.getElementById('student_reference_contact').value = reference_contact;
+        document.getElementById('student_remarks').value = remarks;
+        document.getElementById('student_status_id').value = status_id;
+        document.getElementById('student_admission_date').value = admission_date;
+
+        document.getElementById('edit-student-form').style.display = 'block';
+        document.getElementById('form-title').innerText = 'Edit Student';
+    }
+</script>
+
+{% endblock %}

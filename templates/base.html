@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-blue ">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="{{ url_for('index') }}">
+                Student Management System
+            </a>
+            <button class="navbar-toggler custom-toggler" type="button" id="sidebarToggle" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto">
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ current_user.username }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end custom-dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="{{ url_for('change_password') }}">Change Password</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{{ url_for('login') }}">Login</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <ul class="list-group list-group-flush mt-1">
+            <li class="list-group-item sideMenu mt-5">
+                <img src="{{ url_for('static', filename='images/HOP.jpeg') }}" alt="Logo" width="60px" class="rounded-circle">
+            </li>
+            <li class="list-group-item sideMenu"><img src="{{ url_for('static', filename='images/dashboard.png') }}" alt="category" width="25px"><a href="{{ url_for('admin_dashboard') }}" class="text-white"> Admin Dashboard</a></li>
+            <li class="list-group-item sideMenu"><img src="{{ url_for('static', filename='images/category.png') }}" alt="category" width="25px"><a href="{{ url_for('categories') }}" class="text-white"> Category</a></li>
+            <li class="list-group-item sideMenu"><img src="{{ url_for('static', filename='images/Subcategory.png') }}" alt="subcategory" width="25px"><a href="{{ url_for('subcategories') }}" class="text-white"> Subcategory</a></li>
+            <li class="list-group-item sideMenu"><img src="{{ url_for('static', filename='images/query.png') }}" alt="query" width="25px"><a href="{{ url_for('query') }}" class="text-white"> Queries</a></li>
+            <li class="list-group-item sideMenu"><img src="{{ url_for('static', filename='images/queryForm.png') }}" alt="queryForm" width="25px"><a href="{{ url_for('queries') }}" class="text-white"> Query Form</a></li>
+            <li class="list-group-item sideMenu"><img src="{{ url_for('static', filename='images/stdForm.png') }}" alt="studentForm" width="24px"><a href="{{ url_for('students') }}" class="text-white"> Student Admision Form</a></li>
+            <li class="list-group-item sideMenu"><img src="{{ url_for('static', filename='images/stdList.png') }}" alt="studentList" width="25px"><a href="{{ url_for('students') }}" class="text-white"><a href="{{ url_for('view_student') }}" class="text-white"> Students List</a></li>
+            <li class="list-group-item sideMenu"><img src="{{ url_for('static', filename='images/stdClassLink.png') }}" alt="studentClassLink" width="25px"><a href="{{ url_for('students') }}" class="text-white"><a href="{{ url_for('link_student_course') }}" class="text-white"> Student - Class Linking</a></li>
+            <li class="list-group-item sideMenu"><img src="{{ url_for('static', filename='images/viewStd.png') }}" alt="viewStudentClassLink" width="25px"><a href="{{ url_for('students') }}" class="text-white"><a href="{{ url_for('view_student_links') }}" class="text-white"> View Student - Class Linking</a></li>
+            <li class="list-group-item sideMenu"><img src="{{ url_for('static', filename='images/Course.png') }}" alt="course" width="25px"><a href="{{ url_for('students') }}" class="text-white"><a href="{{ url_for('courses') }}" class="text-white"> Course</a></li>
+            <li class="list-group-item sideMenu"><img src="{{ url_for('static', filename='images/SubCourse.png') }}" alt="subcourse" width="25px"><a href="{{ url_for('students') }}" class="text-white"><a href="{{ url_for('subcourses') }}" class="text-white"> SubCourse</a></li>
+            <li class="list-group-item sideMenu"><img src="{{ url_for('static', filename='images/Teacher.png') }}" alt="teacher" width="25px"><a href="{{ url_for('students') }}" class="text-white"><a href="{{ url_for('teachers') }}" class="text-white"> Teacher</a></li>
+            <li class="list-group-item sideMenu"><img src="{{ url_for('static', filename='images/TeacherClassLink.png') }}" alt="teacherClassLink" width="25px"><a href="{{ url_for('students') }}" class="text-white"><a href="{{ url_for('link_teacher_course') }}" class="text-white"> Teacher - Class Linking</a></li>
+            <li class="list-group-item sideMenu"><img src="{{ url_for('static', filename='images/ViewLink.png') }}" alt="viewTeacherClassLink" width="25px"><a href="{{ url_for('students') }}" class="text-white"><a href="{{ url_for('view_teacher_links') }}" class="text-white"> View Teacher - Class Linking</a></li>
+            <li class="list-group-item sideMenu"><img src="{{ url_for('static', filename='images/checkbox.png') }}" alt="attendance" width="25px"><a href="{{ url_for('students') }}" class="text-white"><a href="{{ url_for('attendance') }}" class="text-white"> Student Attendance</a></li>
+            <li class="list-group-item sideMenu"><img src="{{ url_for('static', filename='images/viewForm.png') }}" alt="feeForm" width="25px"><a href="{{ url_for('students') }}" class="text-white"><a href="{{ url_for('fee_form') }}" class="text-white"> Fee Form</a></li>
+            <li class="list-group-item sideMenu"><img src="{{ url_for('static', filename='images/stdFees.png') }}" alt="studentFees" width="25px"><a href="{{ url_for('students') }}" class="text-white"><a href="{{ url_for('fee_selection') }}" class="text-white"> Student Fees</a></li>
+        </ul>
+    </div>
+
+    <!-- Main content -->
+    <div class="content" id="content">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+    var sidebar = document.querySelector('.sidebar');
+    var toggleButton = document.querySelector('#sidebarToggle'); // Ensure you have this button in your HTML
+    var content = document.querySelector('.content');
+
+    toggleButton.addEventListener('click', function() {
+        sidebar.classList.toggle('sidebar-open');
+        content.classList.toggle('sidebar-open');
+    });
+});
+
+    </script>
+</body>
+
+</html>

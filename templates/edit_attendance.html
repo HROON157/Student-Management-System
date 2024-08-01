@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Attendance{% endblock %}
+
+{% block content %}
+<h1>Edit Attendance</h1>
+
+<form method="POST" action="{{ url_for('edit_attendance', attendance_id=attendance.id) }}">
+    <label for="course_id">Course:</label>
+    <select id="course_id" name="course_id" required>
+        <option value="">Select Course</option>
+        {% for course in courses %}
+        <option value="{{ course.id }}" {% if course.id == attendance.course_id %}selected{% endif %}>{{ course.name }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label for="subcourse_id">Subcourse:</label>
+    <select id="subcourse_id" name="subcourse_id" required>
+        <option value="">Select Subcourse</option>
+        {% for subcourse in subcourses %}
+        <option value="{{ subcourse.id }}" {% if subcourse.id == attendance.subcourse_id %}selected{% endif %}>{{ subcourse.name }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label for="student_id">Student:</label>
+    <select id="student_id" name="student_id" required>
+        <option value="">Select Student</option>
+        {% for student in students %}
+        <option value="{{ student.id }}" {% if student.id == attendance.student_id %}selected{% endif %}>{{ student.name }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label for="attendance_date">Date:</label>
+    <input type="date" id="attendance_date" name="attendance_date" value="{{ attendance.date }}" required><br><br>
+
+    <label for="status">Status:</label>
+    <select id="status" name="status" required>
+        <option value="present" {% if attendance.status == 'present' %}selected{% endif %}>Present</option>
+        <option value="absent" {% if attendance.status == 'absent' %}selected{% endif %}>Absent</option>
+    </select><br><br>
+
+    <button type="submit">Update Attendance</button>
+</form>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}View Teacher Links{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="card shadow-sm border-0">
+        <div class="card-header text-custom-color text-center bg-color text-white">
+            <h2 class="mb-0">Teacher Course Links</h2>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Teacher</th>
+                            <th>Course</th>
+                            <th>Subcourse</th>
+                            <th>Date Assigned</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for link in teacher_courses %}
+                        <tr>
+                            <td>{{ link.teacher.name }} - {{ link.teacher.father_name }} - {{ link.teacher.cnic }} - {{ link.teacher.mobile_number }}</td>
+                            <td>{{ link.course.name }}</td>
+                            <td>{{ link.subcourse.name }}</td>
+                            <td>{{ link.date_assigned }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="text-center mt-4">
+        <a href="{{ url_for('index') }}" class="btn btn-sm bg-color button-bg p-2 no-underline hover-border-black" style="text-decoration: none;">Back to Home</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Edit Teacher</h2>
+<form method="POST">
+    <label for="name">Teacher Name:</label><br>
+    <input type="text" id="name" name="name" value="{{ teacher.name }}" required><br><br>
+
+    <label for="qualification">Qualification:</label><br>
+    <input type="text" id="qualification" name="qualification" value="{{ teacher.qualification }}" required><br><br>
+
+    <label for="course_id">Course:</label><br>
+    <select id="course_id" name="course_id">
+        {% for course in courses %}
+        <option value="{{ course.id }}" {% if teacher.course_id == course.id %}selected{% endif %}>{{ course.name }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label for="subcourse_id">Subcourse:</label><br>
+    <select id="subcourse_id" name="subcourse_id">
+        {% for subcourse in subcourses %}
+        <option value="{{ subcourse.id }}" {% if teacher.subcourse_id == subcourse.id %}selected{% endif %}>{{ subcourse.name }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label for="duration_from">Duration From:</label><br>
+    <input type="date" id="duration_from" name="duration_from" value="{{ teacher.duration_from }}" required><br><br>
+
+    <label for="duration_to">Duration To:</label><br>
+    <input type="date" id="duration_to" name="duration_to" value="{{ teacher.duration_to }}" required><br><br>
+
+    <label for="amount_deposit">Amount Deposit:</label><br>
+    <input type="number" id="amount_deposit" name="amount_deposit" value="{{ teacher.amount_deposit }}" required><br><br>
+
+    <label for="balance_amount">Balance Amount:</label><br>
+    <input type="number" id="balance_amount" name="balance_amount" value="{{ teacher.balance_amount }}" required><br><br>
+
+    <input type="submit" value="Update Teacher">
+</form>
+{% endblock %}

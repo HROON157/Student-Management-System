@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Fees{% endblock %}
+
+{% block content %}
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card shadow-sm p-4" style="max-width: 600px; width: 100%;">
+        <div class="card-body">
+            <h2 class="card-title text-center mb-4 text-custom-color fw-bold">Add Fee</h2>
+            <form>
+                <div class="form-group mb-3">
+                    <label for="course_id" >Course:</label>
+                    <select class="form-control" id="course_id" name="course_id" required>
+                        <option>Select Course</option>
+                        {% for course in courses %}
+                            <option value="{{ course.id }}">{{ course.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="subcourse_id" >Subcourse:</label>
+                    <select class="form-control" id="subcourse_id" name="subcourse_id" required>
+                        <option>Select Subcourse</option>
+                    </select>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="student_id">Student:</label>
+                    <div id="student_list">
+                        <table class="table table-bordered table-responsive" id="students-table" style="display:none;">
+                            <thead>
+                                <tr>
+                                    <th>Student Name</th>
+                                    <th>Father Name</th>
+                                    <th>CNIC</th>
+                                    <th>Mobile Number</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="students-tbody">
+                          
+                            </tbody>
+                        </table><br>
+                    </div>
+                </div>
+                <div class="form-group text-center">
+                    <button type="submit" class="btn bg-color hover-border-black">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('course_id').addEventListener('change', function() {
+        const course_id = this.value;
+        fetch(`/get_students/${course_id}`)
+            .then(response => response.json())
+            .then(data => {
+                const subcourseSelect = document.getElementById('subcourse_id');
+                subcourseSelect.innerHTML = '<option value="">Select Subcourse</option>';
+                data.subcourses.forEach(subcourse => {
+                    subcourseSelect.innerHTML += `<option value="${subcourse.id}">${subcourse.name}</option>`;
+                });
+            });
+    });
+
+    document.getElementById('subcourse_id').addEventListener('change', function() {
+        const subcourse_id = this.value;
+        fetch(`/get_students/${subcourse_id}`)
+            .then(response => response.json())
+            .then(data => {
+                const studentsTable = document.getElementById('students-table');
+                const studentsTbody = document.getElementById('students-tbody');
+                studentsTbody.innerHTML = '';
+                if (data.students.length > 0) {
+                    studentsTable.style.display = 'block';
+                    data.students.forEach(student => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${student.name}</td>
+                            <td>${student.father_name}</td>
+                            <td>${student.cnic}</td>
+                            <td>${student.mobile}</td>
+                            <td>
+                                <button class="btn btn-info btn-sm me-2" onclick="enterFee(${student.id}, '${student.name}', '${student.father_name}', '${student.cnic}', document.getElementById('course_id').value, document.getElementById('subcourse_id').value)">Enter Fee</button>
+                                <button class="btn btn-warning btn-sm" onclick="editFee(${student.id}, '${student.name}', '${student.father_name}', '${student.cnic}', document.getElementById('course_id').value, document.getElementById('subcourse_id').value)">Edit Fee</button>
+                            </td>
+                          `;
+                        studentsTbody.appendChild(row);
+                    });
+                } else {
+                    studentsTable.style.display = 'none';
+                }
+            })
+            .catch(error => console.log('Error fetching students:', error)); // Add error handling
+    });
+
+    function enterFee(studentId, studentName, fatherName, cnic, course_id, subcourse_id) {
+        window.location.href = `/fee_form?student_id=${studentId}&student_name=${studentName}&father_name=${fatherName}&cnic=${cnic}&course_id=${course_id}&subcourse_id=${subcourse_id}`;
+    }
+
+    function editFee(studentId, studentName, fatherName, cnic, course_id, subcourse_id) {
+        window.location.href = `/fee_form?student_id=${studentId}&student_name=${studentName}&father_name=${fatherName}&cnic=${cnic}&course_id=${course_id}&subcourse_id=${subcourse_id}&edit=true`;
+    }
+</script>
+{% endblock %}

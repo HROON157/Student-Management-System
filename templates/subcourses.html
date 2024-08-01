@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Subcourses{% endblock %}
+
+{% block content %}
+
+
+<div class="container my-4">
+
+    <h1 class="text-center mb-4 text-custom-color">Subcourses</h1>
+
+   
+    <div class="card mx-auto" style="max-width: 600px;">
+        <div class="card-header bg-color text-white d-flex justify-content-center">
+            <h2 id="form-title" class="mb-0 ">Add Subcourse</h2>
+        </div>
+
+        <div class="card-body">
+            <form id="subcourse-form" method="POST" action="{{ url_for('subcourses') }}">
+                <input type="hidden" id="subcourse_id" name="subcourse_id">
+                <div class="mb-3">
+                    <label for="course_id" class="form-label">Course:</label>
+                    <select id="course_id" name="course_id" class="form-select" required>
+                        <option value="">Select Course</option>
+                        {% for course in courses %}
+                        <option value="{{ course.id }}">{{ course.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Subcourse Name:</label>
+                    <input type="text" id="name" name="name" class="form-control" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="duration_from" class="form-label">Duration From:</label>
+                    <input type="date" id="duration_from" name="duration_from" class="form-control" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="duration_to" class="form-label">Duration To:</label>
+                    <input type="date" id="duration_to" name="duration_to" class="form-control" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="remarks" class="form-label">Remarks:</label>
+                    <input type="text" id="remarks" name="remarks" class="form-control">
+                </div>
+                
+                <div class="mb-3">
+                    <label for="type" class="form-label">Type:</label>
+                    <input type="text" id="type" name="type" class="form-control" required>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-outline-dark-blue rounded-pill ">Add / Update Subcourse</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Table to list all subcourses -->
+    <div class="mt-4">
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Course</th>
+                    <th>Subcourse Name</th>
+                    <th>Duration (From - To)</th>
+                    <th>Remarks</th>
+                    <th>Type</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subcourse in subcourses %}
+                <tr>
+                    <td>{{ subcourse.id }}</td>
+                    <td>{{ subcourse.course.name }}</td>
+                    <td>{{ subcourse.name }}</td>
+                    <td>{{ subcourse.duration_from }} - {{ subcourse.duration_to }}</td>
+                    <td>{{ subcourse.remarks }}</td>
+                    <td>{{ subcourse.type }}</td>
+                    <td>
+                        <button class="btn rounded-pill bg-color btn-sm button-bg" onclick="editSubcourse('{{ subcourse.id }}', '{{ subcourse.course_id }}', '{{ subcourse.name }}', '{{ subcourse.duration_from }}', '{{ subcourse.duration_to }}', '{{ subcourse.remarks }}', '{{ subcourse.type }}')">Edit</button>
+                        <form method="POST" action="{{ url_for('delete_subcourse', subcourse_id=subcourse.id) }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this subcourse?');">
+                            <button type="submit" class="btn rounded-pill bg-color btn-sm button-bg-red">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+    function editSubcourse(id, course_id, name, duration_from, duration_to, remarks, type) {
+        document.getElementById('subcourse_id').value = id;
+        document.getElementById('course_id').value = course_id;
+        document.getElementById('name').value = name;
+        document.getElementById('duration_from').value = duration_from;
+        document.getElementById('duration_to').value = duration_to;
+        document.getElementById('remarks').value = remarks;
+        document.getElementById('type').value = type;
+        document.getElementById('form-title').innerText = 'Edit Subcourse';
+    }
+
+    document.getElementById('subcourse-form').onsubmit = function() {
+        document.getElementById('form-title').innerText = 'Add Subcourse';
+    };
+</script>
+
+{% endblock %}

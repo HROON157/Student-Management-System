@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Edit Subcourse</h2>
+<form method="POST">
+    <label for="course_id">Course:</label><br>
+    <select id="course_id" name="course_id">
+        {% for course in courses %}
+        <option value="{{ course.id }}" {% if subcourse.course_id == course.id %}selected{% endif %}>{{ course.name }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label for="name">Subcourse Name:</label><br>
+    <input type="text" id="name" name="name" value="{{ subcourse.name }}" required><br><br>
+
+    <label for="duration_from">Duration From:</label><br>
+    <input type="date" id="duration_from" name="duration_from" value="{{ subcourse.duration_from }}" required><br><br>
+
+    <label for="duration_to">Duration To:</label><br>
+    <input type="date" id="duration_to" name="duration_to" value="{{ subcourse.duration_to }}" required><br><br>
+
+    <label for="remarks">Remarks:</label><br>
+    <textarea id="remarks" name="remarks">{{ subcourse.remarks }}</textarea><br><br>
+
+    <label for="type">Type:</label><br>
+    <input type="text" id="type" name="type" value="{{ subcourse.type }}" required><br><br>
+
+    <input type="submit" value="Update Subcourse">
+</form>
+{% endblock %}
