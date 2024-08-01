@@ -1,95 +1,85 @@
+{% extends "base.html" %}
 
+{% block title %}Student Admission{% endblock %}
 
+{% block content %}
+    <form method="POST">
+        <label for="student_id">Student ID:</label><br>
+        <input type="text" id="student_id" name="student_id" maxlength="6" required><br><br>
 
- {% extends "base.html" %}
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name" required><br><br>
 
- {% block title %}Add Student{% endblock %}
- 
- {% block content %}
-     <h1>Add Student</h1>
- 
-     <form method="POST" action="{{ url_for('students') }}">
-         <label for="student_id">Student Id</label><br>
-         <input type="text" id="student_id" name="student_id" required><br><br>
-         
-         <label for="name">Name:</label><br>
-         <input type="text" id="name" name="name" required><br><br>
- 
-         <label for="father_name">Father Name:</label><br>
-         <input type="text" id="father_name" name="father_name" required><br><br>
- 
-         <label for="qualification">Qualification:</label><br>
-         <select id="qualification" name="qualification" required>
-             <option value="Matric">Matric</option>
-             <option value="Inter">Inter</option>
-             <option value="Graduation">Graduation</option>
-         </select><br><br>
- 
-         <label for="age">Age:</label><br>
-         <input type="number" id="age" name="age" required><br><br>
- 
-         <label for="session">Session:</label><br>
-         <select id="session" name="session" required>
-             <option value="Morning">Morning</option>
-             <option value="Evening">Evening</option>
-         </select><br><br>
- 
-         <label for="dob">Date of Birth:</label><br>
-         <input type="date" id="dob" name="dob" required><br><br>
- 
-         <label for="address">Address:</label><br>
-         <input type="text" id="street" name="street" placeholder="Street"><br>
-         <input type="text" id="town" name="town" placeholder="Town"><br>
-         <input type="text" id="city" name="city" placeholder="City"><br>
-         <input type="text" id="country" name="country" placeholder="Country"><br>
-         <input type="text" id="zipcode" name="zipcode" placeholder="Zipcode"><br><br>
- 
-         <label for="cnic">CNIC:</label><br>
-         <input type="text" id="cnic" name="cnic" required><br><br>
- 
-         <label for="email">Email:</label><br>
-         <input type="email" id="email" name="email" required><br><br>
- 
-         <label for="phone">Phone:</label><br>
-         <input type="text" id="phone" name="phone"><br><br>
- 
-         <label for="mobile">Mobile:</label><br>
-         <input type="text" id="mobile" name="mobile"><br><br>
- 
-         <label for="primary_contact">Primary Contact:</label><br>
-         <input type="text" id="primary_contact" name="primary_contact"><br><br>
- 
-         <label for="gender">Gender:</label><br>
-         <select id="gender" name="gender" required>
-             <option value="Male">Male</option>
-             <option value="Female">Female</option>
-         </select><br><br>
- 
-         <label for="reference_name">Reference Name:</label><br>
-         <input type="text" id="reference_name" name="reference_name"><br><br>
- 
-         <label for="reference_contact">Reference Contact:</label><br>
-         <input type="text" id="reference_contact" name="reference_contact"><br><br>
- 
-         <label for="admission_date">Admission Date:</label><br>
-         <input type="date" id="admission_date" name="admission_date" required><br><br>
- 
-         <label for="remarks">Remarks:</label><br>
-         <textarea id="remarks" name="remarks"></textarea><br><br>
- 
-         <label for="status_id">Status:</label><br>
-         <select id="status_id" name="status_id" required>
-             <option value="1">New Query</option>
-             <option value="2">Followed Up</option>
-         </select><br><br>
- 
-         <button type="submit">Add Student</button>
-     </form>
- 
-     {% if error %}
-         <p style="color:red;">{{ error }}</p>
-     {% endif %}
- {% endblock %}
- 
+        <label for="father_name">Father Name:</label><br>
+        <input type="text" id="father_name" name="father_name" required><br><br>
 
+        <label for="qualification">Qualification:</label><br>
+        <select id="qualification" name="qualification" required>
+            <option value="Matric">Matric</option>
+            <option value="Inter">Inter</option>
+            <option value="Graduation">Graduation</option>
+        </select><br><br>
 
+        <label for="age">Age:</label><br>
+        <input type="number" id="age" name="age" required><br><br>
+
+        <label for="session">Session:</label><br>
+        <select id="session" name="session" required>
+            <option value="Morning">Morning</option>
+            <option value="Evening">Evening</option>
+        </select><br><br>
+
+        <label for="dob">Date of Birth:</label><br>
+        <input type="date" id="dob" name="dob" required><br><br>
+
+        <label for="address">Address:</label><br>
+        <input type="text" id="street" name="street" placeholder="Street"><br>
+        <input type="text" id="town" name="town" placeholder="Town"><br>
+        <input type="text" id="city" name="city" placeholder="City"><br>
+        <input type="text" id="country" name="country" placeholder="Country"><br>
+        <input type="text" id="zipcode" name="zipcode" placeholder="Zipcode"><br><br>
+
+        <label for="cnic">CNIC:</label><br>
+        <input type="text" id="cnic" name="cnic" required><br><br>
+
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="phone">Phone:</label><br>
+        <input type="text" id="phone" name="phone"><br><br>
+
+        <label for="mobile">Mobile:</label><br>
+        <input type="text" id="mobile" name="mobile"><br><br>
+
+        <label for="primary_contact">Primary Contact:</label><br>
+        <input type="text" id="primary_contact" name="primary_contact"><br><br>
+
+        <label for="gender">Gender:</label><br>
+        <select id="gender" name="gender" required>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select><br><br>
+
+        <label for="reference_name">Reference Name:</label><br>
+        <input type="text" id="reference_name" name="reference_name"><br><br>
+
+        <label for="reference_contact">Reference Contact:</label><br>
+        <input type="text" id="reference_contact" name="reference_contact"><br><br>
+   
+        <label for="remarks">Remarks:</label><br>
+        <textarea id="remarks" name="remarks"></textarea><br><br>
+
+        <button type="submit">Add Student</button>
+    </form>
+
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% endif %}
+
+    <h2>All Students</h2>
+    <ul>
+        {% for student in students %}
+            <li>{{ student.name }} ({{ student.student_id }})</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
