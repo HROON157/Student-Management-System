@@ -7,45 +7,40 @@
     <div class="card shadow-sm p-4" style="max-width: 600px; width: 100%;">
         <div class="card-body">
             <h2 class="card-title text-center mb-4 text-custom-color fw-bold">Add Fee</h2>
-            <form>
-                <div class="form-group mb-3">
-                    <label for="course_id" >Course:</label>
-                    <select class="form-control" id="course_id" name="course_id" required>
-                        <option>Select Course</option>
-                        {% for course in courses %}
-                            <option value="{{ course.id }}">{{ course.name }}</option>
-                        {% endfor %}
-                    </select>
+            <div class="form-group mb-3">
+                <label for="course_id">Course:</label>
+                <select class="form-control" id="course_id" name="course_id" required>
+                    <option value="">Select Course</option>
+                    {% for course in courses %}
+                        <option value="{{ course.id }}">{{ course.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group mb-3">
+                <label for="subcourse_id">Subcourse:</label>
+                <select class="form-control" id="subcourse_id" name="subcourse_id" required>
+                    <option value="">Select Subcourse</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="student_id">Student:</label>
+                <div id="student_list">
+                    <table class="table table-bordered table-responsive" id="students-table" style="display:none;">
+                        <thead>
+                            <tr>
+                                <th>Student Name</th>
+                                <th>Father Name</th>
+                                <th>CNIC</th>
+                                <th>Mobile Number</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="students-tbody">
+                            <!-- Student rows will be appended here by JavaScript -->
+                        </tbody>
+                    </table><br>
                 </div>
-                <div class="form-group mb-3">
-                    <label for="subcourse_id" >Subcourse:</label>
-                    <select class="form-control" id="subcourse_id" name="subcourse_id" required>
-                        <option>Select Subcourse</option>
-                    </select>
-                </div>
-                <div class="form-group mb-3">
-                    <label for="student_id">Student:</label>
-                    <div id="student_list">
-                        <table class="table table-bordered table-responsive" id="students-table" style="display:none;">
-                            <thead>
-                                <tr>
-                                    <th>Student Name</th>
-                                    <th>Father Name</th>
-                                    <th>CNIC</th>
-                                    <th>Mobile Number</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="students-tbody">
-                          
-                            </tbody>
-                        </table><br>
-                    </div>
-                </div>
-                <div class="form-group text-center">
-                    <button type="submit" class="btn bg-color hover-border-black">Submit</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 </div>
@@ -53,7 +48,7 @@
 <script>
     document.getElementById('course_id').addEventListener('change', function() {
         const course_id = this.value;
-        fetch(`/get_students/${course_id}`)
+        fetch(`/get_subcourses/${course_id}`)
             .then(response => response.json())
             .then(data => {
                 const subcourseSelect = document.getElementById('subcourse_id');
@@ -82,10 +77,10 @@
                             <td>${student.cnic}</td>
                             <td>${student.mobile}</td>
                             <td>
-                                <button class="btn btn-info btn-sm me-2" onclick="enterFee(${student.id}, '${student.name}', '${student.father_name}', '${student.cnic}', document.getElementById('course_id').value, document.getElementById('subcourse_id').value)">Enter Fee</button>
-                                <button class="btn btn-warning btn-sm" onclick="editFee(${student.id}, '${student.name}', '${student.father_name}', '${student.cnic}', document.getElementById('course_id').value, document.getElementById('subcourse_id').value)">Edit Fee</button>
+                                 <button onclick="enterFee(${student.id}, '${student.name}', '${student.father_name}', '${student.cnic}', document.getElementById('course_id').value, document.getElementById('subcourse_id').value)">Enter Fee</button>
+                                 <button onclick="editFee(${student.id}, '${student.name}', '${student.father_name}', '${student.cnic}', ${course_id}, ${subcourse_id})">Edit Fee</button>
                             </td>
-                          `;
+                        `;
                         studentsTbody.appendChild(row);
                     });
                 } else {
