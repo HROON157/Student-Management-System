@@ -3,8 +3,8 @@
 {% block title %}Link Student to Course{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-center align-items-center min-vh-100">
-    <div class="card shadow p-4" style="width: 100%; max-width: 600px;">
+<div class="d-flex justify-content-center align-items-center ">
+    <div class="card shadow p-4" style="width: 40%; max-width: 600px;">
         <div class="card-body">
             <h2 class="card-title mb-4 text-custom-color">Link Student to Course and Subcourse</h2>
             <form method="POST" class="needs-validation" novalidate>
@@ -12,7 +12,7 @@
                 <div class="mb-3">
                     <label for="student_id" class="form-label">Student:</label>
                     <select id="student_id" name="student_id" class="form-select" required>
-                        <option value="" disabled selected>Select a student</option>
+                        <option value="">Select a student</option>
                         {% for student in students %}
                         <option value="{{ student.id }}">{{ student.name }} - {{ student.father_name }} - {{ student.cnic }} - {{ student.mobile_number }}</option>
                         {% endfor %}
@@ -23,7 +23,7 @@
                 <div class="mb-3">
                     <label for="course_id" class="form-label">Course:</label>
                     <select id="course_id" name="course_id" class="form-select" required>
-                        <option value="" disabled selected>Select a course</option>
+                        <option value="" >Select a course</option>
                         {% for course in courses %}
                         <option value="{{ course.id }}">{{ course.name }}</option>
                         {% endfor %}
@@ -34,7 +34,7 @@
                 <div class="mb-3">
                     <label for="subcourse_id" class="form-label">Subcourse:</label>
                     <select id="subcourse_id" name="subcourse_id" class="form-select" required>
-                        <option value="" disabled selected>Select a subcourse</option>
+                        <option value="" >Select a subcourse</option>
                     </select>
                     <div class="invalid-feedback">Please select a subcourse.</div>
                 </div>
@@ -50,7 +50,7 @@
             {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
             {% for category, message in messages %}
-            <div class="alert alert-{{ category }} mt-3">
+            <div class="alert alert-dark container w-50 text-center text-white bg-blue mt-3">
                 {{ message }}
             </div>
             {% endfor %}
