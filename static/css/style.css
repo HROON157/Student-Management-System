@@ -10,7 +10,9 @@
     background-color: #052B54;
     color: #ddd;
 }
-
+.customFont{
+    font-size: 1.2rem;
+}
 .list-group-item.sideMenu {
     align-items: center;
 }
